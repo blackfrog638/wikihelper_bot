@@ -1,5 +1,6 @@
 import requests
 import urllib.parse
+import os
 
 BASE_URL = 'https://zh.wikipedia.org/wiki/'
 
