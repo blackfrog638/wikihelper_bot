@@ -1,14 +1,34 @@
 import requests
 import urllib.parse
 import os
+from bs4 import BeautifulSoup
 
 BASE_URL = 'https://zh.wikipedia.org/wiki/'
+TEMP_DIR = './temp'
+CSS_COUNT = 4
 
 
 def write_file(filename, html):
-    # TODO: 添加css渲染
-    with open(filename, 'w', encoding='utf-8') as f:
+    # 将html内容写入文件
+    print('writing to file...')
+    os.makedirs(TEMP_DIR, exist_ok=True)
+    with open(TEMP_DIR + '/' + filename, 'w', encoding='utf-8') as f:
         f.write(html)
+
+
+def edit_file(html):
+    # 给html文本添加css样式
+    soup = BeautifulSoup(html, 'html.parser')
+    for css_id in range(1, CSS_COUNT+1):
+        f = './css/' + str(css_id) + '.css'
+        print('adding css:' + f + ' ...')
+        new_style_tag = soup.new_tag('style')
+        with open(f, 'r', encoding='utf-8') as f:
+            css_content = f.read()
+            new_style_tag.string = css_content
+            print(soup.title)
+            soup.title.insert(0, new_style_tag)
+    return soup.prettify()
 
 
 def main():
@@ -17,8 +37,11 @@ def main():
     response = requests.get(new_url)
     # TODO: 错误处理（超时）
     if response.status_code == 404:
-        print("未找到该词条")
-    write_file('temp_html.html', response.text)
+        print("Error: 未找到该词条！")
+        return
+    html = response.text
+    html = edit_file(html)
+    write_file('temp_html.html', html)
     # TODO: 图片加载
 
 
