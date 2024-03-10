@@ -17,7 +17,7 @@ def write_file(filename, html):
 
 
 def edit_file(html):
-    # 给html文本添加css样式
+    # 给html文本添加css样式 a
     soup = BeautifulSoup(html, 'html.parser')
     for css_id in range(1, CSS_COUNT+1):
         f = './css/' + str(css_id) + '.css'
