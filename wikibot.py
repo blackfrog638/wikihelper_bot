@@ -26,8 +26,8 @@ def edit_file(html):
         with open(f, 'r', encoding='utf-8') as f:
             css_content = f.read()
             new_style_tag.string = css_content
-            print(soup.title)
-            soup.title.insert(0, new_style_tag)
+            # print(soup.title)
+            soup.head.insert(0, new_style_tag)
     return soup.prettify()
 
 
