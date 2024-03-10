@@ -34,15 +34,17 @@ def edit_file(html):
 def main():
     search_key = input("请输入要搜索的词条：")
     new_url = urllib.parse.urljoin(BASE_URL, search_key)
-    response = requests.get(new_url)
-    # TODO: 错误处理（超时）
+    try:
+        response = requests.get(new_url, timeout=(10, 20))
+    except requests.exceptions.Timeout:
+        print("Error: 很抱歉，请求超时")
+        return
     if response.status_code == 404:
         print("Error: 未找到该词条！")
         return
     html = response.text
     html = edit_file(html)
     write_file('temp_html.html', html)
-    # TODO: 图片加载
 
 
 if __name__ == '__main__':
